@@ -30,7 +30,7 @@ void setup() {
   nema17Stepper.setSpeed(10);
 
   Serial.begin(9600);
-  Serial.println("NEMA 17 is initialized with TB6612");
+  // Serial.println("NEMA 17 is initialized with TB6612");
 
   pinMode(sensor2, INPUT); // set sensor pin as input
 }
@@ -38,17 +38,17 @@ void setup() {
 void loop() {
   // put your main code here, to run repeatedly:
   
-  Serial.println("Moving CW");
-  nema17Stepper.step(StepsPerRev);
+  // Serial.println("Moving CW");
+  nema17Stepper.step(10);
 
   val2 = digitalRead(sensor2); // Read the sensor
 
-  if(val2==1) {
-    Serial.println("Magnet Not Detected");
-  }
-  else {
-    Serial.println("Magnet Detected");
-  }
+  // if(val2==1) {
+  //   Serial.println("Magnet Not Detected");
+  // }
+  // else {
+  //   Serial.println("Magnet Detected");
+  // }
 
   // Ensure the trigger pin is LOW to start
   digitalWrite(trigPin2, LOW);
@@ -65,6 +65,6 @@ void loop() {
   distance2 = (duration2 * 0.0343) / 2;
 
   // Output the measured distance to the Serial Monitor
-  Serial.print("Distance: ");
+  // Serial.print("Distance: ");
   Serial.println(distance2);
 }
