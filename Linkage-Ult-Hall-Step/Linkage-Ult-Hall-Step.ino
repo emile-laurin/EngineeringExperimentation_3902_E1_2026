@@ -1,15 +1,19 @@
 #include <Stepper.h>
-#include <Adafruit_MPU6050.h>
 #include <Adafruit_Sensor.h>
 #include <Wire.h>
 
 //1.8 degree step angle = 200 steps per revolution
 
-const int StepsPerRev = 2000;
-int sensor2 = 2; // sensor pin
+const int StepsPerRev = 1000;
+int sensor2 = 9; // sensor pin
 int val2; // 0: Magnetic field detected, 1: No magnetic field detected
 
-Adafruit_MPU6050 mpu2;
+// Define the pins for the HC-SR04 sensor
+const int trigPin2 = 8; // Pin that triggers the ultrasonic pulse
+const int echoPin2 = 9; // Pin that receives the echo signal
+
+// Variables to store the pulse duration and calculated distance
+float duration2, distance2;
 
 //Initializing Stepper Library
 //(steps,AIN1,AIN2,BIN1,NIN2)
@@ -18,6 +22,10 @@ Stepper nema17Stepper(StepsPerRev,5,4,6,7);
 void setup() {
   // put your setup code here, to run once:
 
+  // Configure the trigger pin as an OUTPUT and the echo pin as an INPUT
+  pinMode(trigPin2, OUTPUT); // Set trigger pin as output
+  pinMode(echoPin2, INPUT);  // Set echo pin as input
+
   //Set motor speed in rmp
   nema17Stepper.setSpeed(10);
 
@@ -25,32 +33,13 @@ void setup() {
   Serial.println("NEMA 17 is initialized with TB6612");
 
   pinMode(sensor2, INPUT); // set sensor pin as input
-
-  while (!Serial)
-    delay(10); // will pause Zero, Leonardo, etc until serial console opens
-
-  Serial.println("Adafruit MPU6050 test!");
-
-  // Try to initialize MPU at I2C address 2 (change this to your MPU's actual address)!
-  if (!mpu2.begin(2)) {
-    Serial.println("Failed to find MPU6050 chip");
-    while (1) {
-      delay(10);
-    }
-  }
-  Serial.println("MPU6050 Found!");
 }
 
 void loop() {
   // put your main code here, to run repeatedly:
   
   Serial.println("Moving CW");
-  nema17Stepper.step(StepsPerRev);
-  delay(1000); //pause for one second
-
-  Serial.print("Moving CCW");
-  nema17Stepper.step(-StepsPerRev);
-  delay(1000);
+  nema17Stepper.step(10);
 
   val2 = digitalRead(sensor2); // Read the sensor
 
@@ -60,31 +49,22 @@ void loop() {
   else {
     Serial.println("Magnet Detected");
   }
-  delay(100);
 
-  /* Get new sensor events with the readings */
-  sensors_event_t a2, g2, temp2;
-  mpu2.getEvent(&a2, &g2, &temp2);
+  // Ensure the trigger pin is LOW to start
+  digitalWrite(trigPin2, LOW);
 
-  /* Print out the values */
-  Serial.print("Acceleration X: ");
-  Serial.print(a2.acceleration.x);
-  Serial.print(", Y: ");
-  Serial.print(a2.acceleration.y);
-  Serial.print(", Z: ");
-  Serial.print(a2.acceleration.z);
-  Serial.println(" m/s^2");
+  // Trigger the sensor by sending a HIGH pulse for 10 microseconds
+  digitalWrite(trigPin2, HIGH);
+  digitalWrite(trigPin2, LOW);
 
-  Serial.print("Rotation X: ");
-  Serial.print(g2.gyro.x);
-  Serial.print(", Y: ");
-  Serial.print(g2.gyro.y);
-  Serial.print(", Z: ");
-  Serial.print(g2.gyro.z);
-  Serial.println(" rad/s");
+  // Read the duration of the echo pulse (in microseconds)
+  duration2 = pulseIn(echoPin2, HIGH);
 
-  Serial.print("Temperature: ");
-  Serial.print(temp2.temperature);
-  Serial.println(" degC");
-  delay(500);
+  // Calculate the distance (cm) using the speed of sound (0.0343 cm/us)
+  // Dividing by 2 accounts for the round-trip distance
+  distance2 = (duration2 * 0.0343) / 2;
+
+  // Output the measured distance to the Serial Monitor
+  Serial.print("Distance: ");
+  Serial.println(distance2);
 }
