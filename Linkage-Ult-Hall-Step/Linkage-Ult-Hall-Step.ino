@@ -39,7 +39,7 @@ void loop() {
   // put your main code here, to run repeatedly:
   
   Serial.println("Moving CW");
-  nema17Stepper.step(10);
+  nema17Stepper.step(StepsPerRev);
 
   val2 = digitalRead(sensor2); // Read the sensor
 
