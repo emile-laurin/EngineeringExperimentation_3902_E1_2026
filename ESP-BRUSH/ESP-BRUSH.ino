@@ -22,10 +22,10 @@ void setup() {
   delay(500);
 
   WiFi.mode(WIFI_AP);
-  bool success = WiFi.sotAP(ssid, NULL, 1);
+  bool success = WiFi.softAP(ssid, NULL, 1);
 
   if(success) {
-    Serial.println("Access Point successfully started!")
+    Serial.println("Access Point successfully started!");
     Serial.print("SSID: ");
     Serial.println(ssid);
     Serial.print("AP IP Address: ");
@@ -62,8 +62,8 @@ void loop() {
 
   if(packetSize) {
     int len=udp.read(packetBuffer,255);
-    i(len>0) {
-      packetBuffer[len]=0
+    if(len>0) {
+      packetBuffer[len]=0;
     }
   }
 
@@ -83,19 +83,19 @@ void loop() {
     String command = String(packetBuffer);
     command.trim();
 
-    if(command=='1') {
-      digitalWrite(in1,HIGH);
-      digitalWrite(in2,LOW);
-      analogWrite(enA,200);
-      Serial.println("Motor is Running");
-    }
+    // if(command=='1') {
+    //   digitalWrite(in1,HIGH);
+    //   digitalWrite(in2,LOW);
+    //   analogWrite(enA,200);
+    //   Serial.println("Motor is Running");
+    // }
 
-    else if(command=='0') {
-      digitalWrite(in1,LOW);
-      digitalWrite(in2,LOW);
-      analogWrite(enA,0);
-      Serial.println("Motor is not Running");      
-    }
+    // else if(command=='0') {
+    //   digitalWrite(in1,LOW);
+    //   digitalWrite(in2,LOW);
+    //   analogWrite(enA,0);
+    //   Serial.println("Motor is not Running");      
+    // }
 
     // else {
     //   Serial.println("Unknown command typed");
