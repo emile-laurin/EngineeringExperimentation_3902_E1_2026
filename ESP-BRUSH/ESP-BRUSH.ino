@@ -1,14 +1,43 @@
+#include <WiFi.h>
+#include <WiFiUdp.h>
+
+//Wifi config
+
+const char* ssid="ESP32_Control";
+const int localPort = 5005;
+
 //Motor Driver Pin Definitions
 
 const int enA = 14;
 const int in1 = 27;
 const int in2 = 26;
 
+WiFiUDP udp;
+char packetBuffer[225];
+
 void setup() {
   //Serial Monitor
   Serial.begin(115200);
 
   delay(500);
+
+  WiFi.mode(WIFI_AP);
+  bool success = WiFi.sotAP(ssid, NULL, 1);
+
+  if(success) {
+    Serial.println("Access Point successfully started!")
+    Serial.print("SSID: ");
+    Serial.println(ssid);
+    Serial.print("AP IP Address: ");
+    Serial.println(WiFi.softAPIP()); //Should be 192.168.4.1
+  }
+  else {
+    Serial.println("Failed to start Access Point.");
+  }
+
+  //Start listening for UDP packets from MATLAB
+  udp.begin(localPort);
+  Serial.printf("Listening on UDP port %d\n", localPort);
 
   //Initialize Motor Driver Pins
 
@@ -29,18 +58,31 @@ void setup() {
 
 void loop() {
 
-  if(Serial.available() > 0) { //Checking if user has typed anything in the Serial monitor
+  int packetSize = udp.parsePacket();
+
+  if(packetSize) {
+    int len=udp.read(packetBuffer,255);
+    i(len>0) {
+      packetBuffer[len]=0
+    }
+  }
+
+  // if(Serial.available() > 0) { //Checking if user has typed anything in the Serial monitor
     // String command = Serial.readStringUntil('\n');
     // command.trim();
     // command.toUpperCase();
     //Clean up the string - not following the instructions
 
-    char command = Serial.read();
+    // char command = Serial.read();
 
     // Serial.print("Command Received");
     // Serial.println(command);
 
     //Motor Logic
+
+    String command = String(packetBuffer);
+    command.trim();
+
     if(command=='1') {
       digitalWrite(in1,HIGH);
       digitalWrite(in2,LOW);
@@ -58,5 +100,5 @@ void loop() {
     // else {
     //   Serial.println("Unknown command typed");
     // }
-  }
+  // }
 }
