@@ -13,7 +13,7 @@ void setup() {
   Serial.println("Adafruit MPU6050 test!");
 
   // Try to initialize MPU at I2C address 2 (change this to your MPU's actual address)!
-  if (!mpu2.begin(2)) {
+  if (!mpu2.begin(0x68)) {
     Serial.println("Failed to find MPU6050 chip");
     while (1) {
       delay(10);
