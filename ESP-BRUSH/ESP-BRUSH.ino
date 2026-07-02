@@ -23,38 +23,40 @@ void setup() {
 
   //Instructions to the user
   Serial.println("ESP 32 Trials");
-  Serial.println("Type 'START' to turn motor on");
-  Serial.println("Type 'STOP' to turn motor off");
+  // Serial.println("Type 'START' to turn motor on");
+  // Serial.println("Type 'STOP' to turn motor off");
 }
 
 void loop() {
 
   if(Serial.available() > 0) { //Checking if user has typed anything in the Serial monitor
-    String command = Serial.readStringUntil('\n');
-    command.trim();
-    command.toUpperCase();
+    // String command = Serial.readStringUntil('\n');
+    // command.trim();
+    // command.toUpperCase();
     //Clean up the string - not following the instructions
 
-    Serial.print("Command Received");
-    Serial.println(command);
+    char command = Serial.read();
+
+    // Serial.print("Command Received");
+    // Serial.println(command);
 
     //Motor Logic
-    if(command=="START") {
+    if(command=='1') {
       digitalWrite(in1,HIGH);
       digitalWrite(in2,LOW);
       analogWrite(enA,200);
       Serial.println("Motor is Running");
     }
 
-    else if(command=="STOP") {
+    else if(command=='0') {
       digitalWrite(in1,LOW);
       digitalWrite(in2,LOW);
       analogWrite(enA,0);
       Serial.println("Motor is not Running");      
     }
 
-    else {
-      Serial.println("Unknown command typed");
-    }
+    // else {
+    //   Serial.println("Unknown command typed");
+    // }
   }
 }
