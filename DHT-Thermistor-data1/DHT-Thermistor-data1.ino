@@ -4,7 +4,7 @@
 #define DHTPIN 2
 #define DHTTYPE DHT22
 
-#define THERMISTORPIN 7
+#define THERMISTORPIN A4
 
 DHT dht(DHTPIN,DHTTYPE);
 
@@ -13,7 +13,7 @@ const float SeriesResistor=10000; //10k resistor
 const float NominalResistance=10000; //resistance at 25 degC
 const float NominalTemperature=25.0;
 const float BCoefficient=3950.0; //from spec sheet
-const float ADCMax=4095.0; //from esp32 ADC resolution
+const float ADCMax=1023.0; //from Arduino ADC resolution
 
 void setup() {
   // put your setup code here, to run once:
