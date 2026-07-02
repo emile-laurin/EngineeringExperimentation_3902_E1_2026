@@ -1,10 +1,10 @@
-#include "DHT.h"
+#include <DHT.h>
 #include "math.h"
 
-#define DHTPIN 23
+#define DHTPIN 2
 #define DHTTYPE DHT22
 
-#define THERMISTORPIN 34
+#define THERMISTORPIN 7
 
 DHT dht(DHTPIN,DHTTYPE);
 
@@ -28,7 +28,7 @@ void setup() {
 void loop() {
   // put your main code here, to run repeatedly:
 
-  delay(2000);
+  delay(100);
 
   float humidity = dht.readHumidity();
   float temperature = dht.readTemperature();
@@ -71,5 +71,5 @@ void loop() {
   // Serial.print("Thermistor Temp in deg C: ");
   // Serial.println(tempC);
 
-  delay(1000);
+  delay(100);
 }
